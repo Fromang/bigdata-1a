@@ -1,5 +1,8 @@
 # Big Data-1
-Usage: python main.py -m <method> -i <input_file>
+Usage: 
+```bash
+python main.py -m <method> -i <input_file>
+```
 
 # Supported methods
 
