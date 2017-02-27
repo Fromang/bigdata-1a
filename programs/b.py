@@ -52,7 +52,55 @@ class SparkTest(BaseTest):
 
         print("Total airports: " + str(table.total_airports()))
 
-SparkTest.description = """Spark"""
+SparkTest.description = """Spark
+First Spark try. Seems to be faster"""
+
+
+class SparkParallelTest(BaseTest):
+    def __init__(self, *args, **kwargs):
+        BaseTest.__init__(self, *args, **kwargs)
+        self.sc = SparkContext(appName="Big Data")
+        self.sc.setLogLevel("WARN")
+        self.airports = None
+
+    @staticmethod
+    def group_airports(airport_a, airport_b):
+        airport_a[1] += airport_b[1]
+        airport_a[2] += airport_b[2]
+        airport_a[3] += airport_b[3]
+        return airport_a
+
+    @staticmethod
+    def group_landings_departures(airport):
+        airport = airport[1]
+        airport[0][1] += airport[1][1]
+        airport[0][2] += airport[1][2]
+        airport[0][3] += airport[1][3]
+        return airport[0]
+
+    def execute(self):
+        dist_file = self.sc.textFile(self.filename)
+        rdd = dist_file.map(lambda line: line.split(';'))
+
+        # Parallel tasks
+        rdd1 = rdd.map(lambda words: (words[0], [words[0], 1, 0, 1]), 2).reduceByKey(self.group_airports)
+        rdd2 = rdd.map(lambda words: (words[1], [words[1], 0, 1, 1]), 2).reduceByKey(self.group_airports)
+
+        rdd = rdd1.join(rdd2)
+        rdd = rdd.map(self.group_landings_departures)
+
+        self.airports = rdd.takeOrdered(10, key=lambda airport: -airport[3])
+
+    def print_results(self):
+        table = AirportTableFast(self.airports)
+
+        print("Top ten airports:")
+        table.draw()
+
+        print("Total airports: " + str(table.total_airports()))
+
+SparkParallelTest.description = """Spark Parallel
+Try to use different maps to increase performance when the computer has more CPUs"""
 
 
 class PythonMapReduceTest(BaseTest):
