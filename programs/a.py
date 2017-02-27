@@ -1,9 +1,10 @@
 from common import Traffic, AirportCounter, AirportTable
+from _base import BaseTest
 
 
-class BaseTest:
-    def __init__(self, filename):
-        self.filename = filename
+class BaseTestA(BaseTest):
+    def __init__(self, *args, **kwargs):
+        BaseTest.__init__(self, *args, **kwargs)
 
     def test_process(self, traffic):
         self.get_airport(traffic.arrival).increase_take_off()
@@ -27,7 +28,7 @@ class BaseTest:
         print("Total airports: " + str(table.total_airports()))
 
 
-class ListTest(BaseTest):
+class ListTest(BaseTestA):
     def __init__(self, *args, **kwargs):
         BaseTest.__init__(self, *args, **kwargs)
         self.airports = list()
@@ -47,7 +48,7 @@ ListTest.description = """List (without index)
 This is the worst because each time has to find in all the stored airport counters."""
 
 
-class SortedListTest(BaseTest):
+class SortedListTest(BaseTestA):
     def __init__(self, *args, **kwargs):
         BaseTest.__init__(self, *args, **kwargs)
         self.airports = list()
@@ -88,7 +89,7 @@ Optimization for the list method.
 The airports are sorted by name, then a dichotomic search can be used."""
 
 
-class DictionaryTest(BaseTest):
+class DictionaryTest(BaseTestA):
     def __init__(self, *args, **kwargs):
         BaseTest.__init__(self, *args, **kwargs)
         self.airports = dict()

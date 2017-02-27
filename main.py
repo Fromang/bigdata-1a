@@ -51,11 +51,12 @@ def main(argv):
         close_program()
 
     test_class = programs[tp]
-    test = test_class(input_file)
     print("========================================================================================================")
     print(test_class.description)
     print("========================================================================================================")
     print("")
+    print("Initializing program...")
+    test = test_class(filename=input_file)
     print("Executing program...")
     t1 = time.time()
     test.execute()

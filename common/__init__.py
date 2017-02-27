@@ -1,3 +1,3 @@
 from traffic import Traffic
 from airport_counter import AirportCounter
-from airport_table import AirportTable
+from airport_table import AirportTable, AirportTableFast

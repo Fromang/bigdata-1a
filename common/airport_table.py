@@ -1,5 +1,3 @@
-
-
 class AirportTable:
     def __init__(self, airports):
         self.airports = airports
@@ -24,3 +22,22 @@ class AirportTable:
             line += str(airport.take_off) + " " * (14 - len(str(airport.take_off)))
             line += str(airport.landings)
             print(line)
+
+
+class AirportTableFast:
+    def __init__(self, airports):
+        self.airports = airports
+
+    def draw(self):
+        self._draw_table(self.airports)
+
+    def total_airports(self):
+        return len(self.airports)
+
+    @staticmethod
+    def _draw_table(airports):
+        print("AIRPORT NAME    TOTAL #MOVEMENTS    #TAKE-OFFs    #LANDINGS")
+        for i in range(0, len(airports)):
+            airport = airports[i]
+            print airport
+            print('%-17s %-17i %-17i %-17i' % (airport[0], airport[1], airport[2], airport[3]))
